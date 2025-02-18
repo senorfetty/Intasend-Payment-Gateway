@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntaSend Payment Integration</title>
+    <!-- Add IntaSend Inline SDK -->
+    <script src="https://unpkg.com/intasend-inlinejs-sdk@4.0.5/build/intasend-inline.js"></script>
+</head>
+<body>
+
+    <h1>Make a Payment</h1>
+
+    <!-- IntaSend Payment Button -->
+    <button class="intaSendPayButton" data-amount="1000" data-currency="KES" data-email="user@example.com" data-phone_number="254712345678" data-first_name="John" data-last_name="Doe" data-api_ref="INV-12345">Pay Now</button>
+
+    <script>
+        // Initialize IntaSend with your publishable API key
+        new window.IntaSend({
+            publicAPIKey: "<REPLACE-WITH-YOUR-PUBLISHABLE-KEY>", // Replace with your sandbox or live key
+            live: false // Change to true when going live
+        })
+        .on("COMPLETE", (results) => {
+            console.log("Payment successful:", results);
+            // Redirect on successful payment
+            window.location.href = "https://your-success-page.com";
+        })
+        .on("FAILED", (results) => {
+            console.log("Payment failed:", results);
+            // Handle failure
+            alert("Payment failed, please try again.");
+        })
+        .on("IN-PROGRESS", (results) => {
+            console.log("Payment in progress:", results);
+        });
+    </script>
+
+</body>
+</html>
