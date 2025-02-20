@@ -11,29 +11,41 @@
 
     <h1>Make a Payment</h1>
 
-    <!-- IntaSend Payment Button -->
-    <button class="intaSendPayButton" data-amount="1000" data-currency="KES" data-email="user@example.com" data-phone_number="254712345678" data-first_name="John" data-last_name="Doe" data-api_ref="INV-12345">Pay Now</button>
+    <button id = 'pay'>Pay</button>
 
     <script>
-        // Initialize IntaSend with your publishable API key
-        new window.IntaSend({
-            publicAPIKey: "<REPLACE-WITH-YOUR-PUBLISHABLE-KEY>", // Replace with your sandbox or live key
-            live: false // Change to true when going live
-        })
-        .on("COMPLETE", (results) => {
-            console.log("Payment successful:", results);
-            // Redirect on successful payment
-            window.location.href = "https://your-success-page.com";
-        })
-        .on("FAILED", (results) => {
-            console.log("Payment failed:", results);
-            // Handle failure
-            alert("Payment failed, please try again.");
-        })
-        .on("IN-PROGRESS", (results) => {
-            console.log("Payment in progress:", results);
-        });
-    </script>
+        document.getElementById('pay').addEventListener('click', async () => {
+            payload = {
+                'amount': data.get('amount'),
+                'currency': data.get('currency'),
+                'email': data.get('email'),
+                'phone_number': data.get('phone_number'),
+                'first_name': data.get('first_name'),
+                'last_name': data.get('last_name'),
+                'api_ref': data.get('api_ref'),
+                'redirect_url': data.get('redirect_url')
+            };
 
+            try{ 
+                const response = await fetch('/generate_checkout', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringfy(payload)
+                })
+
+                const result =await response.json()
+                if (response.ok) {
+                    window.location.href= result.urcheckout_urll
+                } else {
+                    alert('Error:' + result.error)
+                }                
+            } catch (error) {
+                console.error('Error error', error)
+                alert('There is an issue')
+            }
+        })
+    </script>
+   
+    
 </body>
 </html>
