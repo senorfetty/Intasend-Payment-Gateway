@@ -5,47 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IntaSend Payment Integration</title>
     <!-- Add IntaSend Inline SDK -->
-    <script src="https://unpkg.com/intasend-inlinejs-sdk@4.0.5/build/intasend-inline.js"></script>
+    <script src="https://unpkg.com/intasend-inlinejs-sdk@4.0.7/build/intasend-inline.js"></script>
 </head>
 <body>
 
     <h1>Make a Payment</h1>
 
-    <button id = 'pay'>Pay</button>
+    <button class="intaSendPayButton" data-amount="10" data-currency="KES">Pay Now</button> 
 
     <script>
-        document.getElementById('pay').addEventListener('click', async () => {
-            payload = {
-                'amount': data.get('amount'),
-                'currency': data.get('currency'),
-                'email': data.get('email'),
-                'phone_number': data.get('phone_number'),
-                'first_name': data.get('first_name'),
-                'last_name': data.get('last_name'),
-                'api_ref': data.get('api_ref'),
-                'redirect_url': data.get('redirect_url')
-            };
-
-            try{ 
-                const response = await fetch('/generate_checkout', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringfy(payload)
-                })
-
-                const result =await response.json()
-                if (response.ok) {
-                    window.location.href= result.urcheckout_urll
-                } else {
-                    alert('Error:' + result.error)
-                }                
-            } catch (error) {
-                console.error('Error error', error)
-                alert('There is an issue')
-            }
+        new window.IntaSend ({
+            publicAPIKey: publicAPIKey,
+            live: false,
         })
+        .on('COMPLETE', (results)  => {console.log('Do something with the results', results)})
+        .on('FAILED', (results)  => {console.log('Do something with the results', results)})
+        .on('IN-PROGRESS', (results)  => {console.log('Do something with the results', results)})
+
     </script>
-   
     
 </body>
 </html>
